@@ -13,11 +13,9 @@
             --text-main: #ffffff;
             --text-sec: #888888;
             --accent: #ffffff;
-            --accent-bg: #222222;
+            --accent-bg: #1c1c1c;
         }
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -36,7 +34,7 @@
             border-bottom: 1px solid var(--card-border);
             position: sticky;
             top: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.92);
             backdrop-filter: blur(10px);
             z-index: 50;
         }
@@ -62,24 +60,7 @@
             font-size: 14px;
             outline: none;
         }
-        .search-input::placeholder {
-            color: #555555;
-        }
-        .search-input:focus {
-            border-color: #ffffff;
-        }
-        .photo-btn {
-            background: #1a1a1a;
-            border: 1px solid #333333;
-            color: #ffffff;
-            padding: 0 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .search-input:focus { border-color: #ffffff; }
         .filters-bar {
             display: flex;
             gap: 6px;
@@ -87,9 +68,7 @@
             scrollbar-width: none;
             margin-bottom: 12px;
         }
-        .filters-bar::-webkit-scrollbar {
-            display: none;
-        }
+        .filters-bar::-webkit-scrollbar { display: none; }
         .filter-chip {
             background: #000000;
             border: 1px solid var(--card-border);
@@ -123,9 +102,7 @@
             flex-direction: column;
             gap: 12px;
         }
-        .section-content.active {
-            display: flex;
-        }
+        .section-content.active { display: flex; }
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -133,50 +110,69 @@
             padding: 16px;
             position: relative;
         }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
         .badge {
             display: inline-block;
-            background: var(--accent-bg);
-            color: var(--text-main);
-            padding: 4px 10px;
+            background: #ffffff;
+            color: #000000;
+            padding: 4px 8px;
             border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 10px;
+        }
+        .badge-outline {
+            background: transparent;
+            color: var(--text-sec);
             border: 1px solid #333333;
         }
         .title {
             font-size: 16px;
             font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.2px;
+            margin-bottom: 8px;
+            line-height: 1.3;
         }
         .price-row {
             display: flex;
             align-items: baseline;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 12px;
         }
         .price {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
-        .discount {
+        .orig-price {
             color: var(--text-sec);
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
         }
-        .info-grid {
-            font-size: 13px;
-            color: var(--text-sec);
+        .analytics-box {
+            background: #080808;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 14px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            margin-bottom: 14px;
-            border-top: 1px solid var(--card-border);
-            padding-top: 10px;
+            gap: 6px;
+            font-size: 12px;
+        }
+        .analytics-row {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-sec);
+        }
+        .analytics-row b {
+            color: var(--text-main);
+            font-weight: 600;
         }
         .actions {
             display: flex;
@@ -184,7 +180,7 @@
         }
         .btn {
             flex: 1;
-            padding: 12px;
+            padding: 11px;
             border-radius: 12px;
             border: none;
             font-weight: 700;
@@ -193,33 +189,18 @@
             text-align: center;
             text-decoration: none;
         }
-        .btn-primary {
-            background: #ffffff;
-            color: #000000;
-        }
-        .btn-secondary {
-            background: #1a1a1a;
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-        }
-        .profile-box, .empty-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
+        .btn-primary { background: #ffffff; color: #000000; }
+        .btn-secondary { background: #1a1a1a; color: var(--text-main); border: 1px solid var(--card-border); }
+        .loader {
             text-align: center;
+            padding: 30px;
             color: var(--text-sec);
-            font-size: 14px;
-        }
-        .profile-box h3, .empty-box h3 {
-            color: var(--text-main);
-            margin-top: 0;
+            font-size: 13px;
+            display: none;
         }
         .nav-bar {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             height: 62px;
             background: var(--bg-color);
             border-top: 1px solid var(--card-border);
@@ -232,155 +213,93 @@
             color: var(--text-sec);
             font-size: 11px;
             text-align: center;
-            text-decoration: none;
             flex: 1;
             font-weight: 500;
             cursor: pointer;
             background: none;
             border: none;
         }
-        .nav-item.active {
-            color: var(--text-main);
-            font-weight: 700;
+        .nav-item.active { color: var(--text-main); font-weight: 700; }
+        .nav-item div { font-size: 18px; margin-bottom: 2px; }
+        .empty-box, .profile-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-sec);
+            font-size: 14px;
         }
-        .nav-item div {
-            font-size: 18px;
-            margin-bottom: 2px;
-        }
+        .empty-box h3, .profile-box h3 { color: var(--text-main); margin-top: 0; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <span id="headerTitle">Danilin Radar ⚡</span>
-        <span style="font-size: 11px; color: var(--text-sec); font-weight: 600; border: 1px solid #222; padding: 3px 8px; border-radius: 6px;">GLOBAL</span>
+        <span style="font-size: 11px; color: var(--text-sec); font-weight: 600; border: 1px solid #222; padding: 3px 8px; border-radius: 6px;">ARBITRAGE</span>
     </div>
 
-    <!-- 1. ЛЕНТА И ПОИСК -->
     <div id="tab-feed" class="section-content active">
-        
         <div class="search-terminal">
             <div class="search-input-row">
-                <input type="text" id="queryInput" class="search-input" placeholder="Бренд, модель или артикул...">
-                <button class="photo-btn" onclick="triggerPhotoSearch()" title="Поиск по фото">📷</button>
+                <input type="text" id="queryInput" class="search-input" placeholder="Например: Stone Island Goggle или C.P. Company">
             </div>
             
             <div class="filters-bar" id="regionFilters">
-                <div class="filter-chip active" data-region="all" onclick="selectRegion(this)">🌍 Весь мир</div>
-                <div class="filter-chip" data-region="eu_us" onclick="selectRegion(this)">🇺🇸🇪🇺 США / Европа</div>
+                <div class="filter-chip active" data-region="all" onclick="selectRegion(this)">🌍 Все рынки</div>
+                <div class="filter-chip" data-region="us_eu" onclick="selectRegion(this)">🇺🇸🇪🇺 Grailed / Vinted</div>
                 <div class="filter-chip" data-region="asia" onclick="selectRegion(this)">🇰🇷🇨🇳 Азия / Карго</div>
-                <div class="filter-chip" data-region="ru" onclick="selectRegion(this)">🇷🇺 РФ (Авито)</div>
             </div>
 
-            <button class="search-submit" onclick="runGlobalSearch()">Найти лоты по миру</button>
+            <button class="search-submit" onclick="fetchMarketListings()">Сканировать объявления и рынок РФ</button>
         </div>
 
-        <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 12px;">
-            <!-- Стартовые примеры / свежие находки -->
-            <div class="card">
-                <div class="badge">Ниже оценки рынка</div>
-                <div class="title">Stone Island Goggle Puffer Jacket</div>
-                <div class="price-row">
-                    <span class="price">42 500 ₽</span>
-                    <span class="discount">-24% от рынка</span>
-                </div>
-                <div class="info-grid">
-                    <span>Ориентир на Авито: 56 000 ₽</span>
-                    <span>📍 Площадка: Grailed (США / Мир)</span>
-                    <span>🕒 Найдено: 15 минут назад</span>
-                </div>
-                <div class="actions">
-                    <a href="https://www.grailed.com/shop/stone-island" target="_blank" class="btn btn-primary">Открыть лот</a>
-                    <button class="btn btn-secondary" onclick="saveOrder('Stone Island Goggle Puffer Jacket', 'Grailed')">Отслеживать</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="badge">Steal Deal</div>
-                <div class="title">C.P. Company D.D. Shell Jacket</div>
-                <div class="price-row">
-                    <span class="price">18 900 ₽</span>
-                    <span class="discount">-35% стел</span>
-                </div>
-                <div class="info-grid">
-                    <span>Ориентир на Авито: 29 000 ₽</span>
-                    <span>📍 Площадка: Vinted (Европа)</span>
-                    <span>🕒 Найдено: 1 час назад</span>
-                </div>
-                <div class="actions">
-                    <a href="https://www.vinted.com/catalog?search_text=cp%20company" target="_blank" class="btn btn-primary">Открыть лот</a>
-                    <button class="btn btn-secondary" onclick="saveOrder('C.P. Company D.D. Shell Jacket', 'Vinted')">Отслеживать</button>
-                </div>
-            </div>
-        </div>
+        <div id="loader" class="loader">⚡ Сканируем мировые площадки и сверяем цены с Авито...</div>
+        <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
     </div>
 
-    <!-- 2. ОРДЕРА / СЛЕЖЕНИЯ -->
     <div id="tab-orders" class="section-content">
         <div id="ordersList" style="display: flex; flex-direction: column; gap: 12px;">
-            <div class="empty-box" id="emptyOrdersBox">
+            <div class="empty-box">
                 <h3>Активных ордеров нет</h3>
-                <p>Нажимай «Отслеживать» на любом найденном лоте или отправь фото вещи в бота для автоматического мониторинга.</p>
+                <p>Сохраняй выгодные лоты из выдачи, чтобы следить за изменением цены.</p>
             </div>
         </div>
     </div>
 
-    <!-- 3. КАТЕГОРИИ / ПЛОЩАДКИ -->
     <div id="tab-categories" class="section-content">
         <div class="card">
-            <div class="title">🇺🇸🇪🇺 США и Европа</div>
-            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
-                <span>• Grailed — архив, стритвир, люкс</span>
-                <span>• Vinted — европейский локальный ресейл</span>
-                <span>• Vestiaire Collective — премиум и винтаж</span>
-                <span>• eBay / Depop — мировые аукционы</span>
-            </div>
-        </div>
-        <div class="card">
-            <div class="title">🇰🇷🇨🇳🇯🇵 Азия и Карго</div>
-            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
-                <span>• Bunjang / Kream — Южная Корея</span>
-                <span>• Goofish (Xianyu) / Poizon — Китай</span>
-                <span>• Mercari JP / Yahoo Auctions — Япония</span>
-            </div>
-        </div>
-        <div class="card">
-            <div class="title">🇷🇺 Локальный рынок</div>
-            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
-                <span>• Авито — фильтр от дешевых по РФ</span>
+            <div class="title">📊 Курсы конвертации терминала</div>
+            <div class="analytics-box" style="margin-bottom:0;">
+                <div class="analytics-row"><span>USD ➔ RUB</span><b>82.80 ₽</b></div>
+                <div class="analytics-row"><span>EUR ➔ RUB</span><b>91.50 ₽</b></div>
+                <div class="analytics-row"><span>Закладываемое карго</span><b>+2 500 ₽</b></div>
             </div>
         </div>
     </div>
 
-    <!-- 4. ПРОФИЛЬ -->
     <div id="tab-profile" class="section-content">
         <div class="profile-box">
             <h3 id="userName">Danilin Reseller</h3>
             <p>Статус: <b style="color:#fff;">VIP / Admin</b></p>
-            <p>Режим сканера: <b>Global Multi-Market</b></p>
-            <p style="font-size: 12px; color: #555; margin-top: 15px;" id="userIdInfo">Telegram ID: загрузка...</p>
+            <p style="font-size: 12px; color: #555;" id="userIdInfo">Telegram ID: загрузка...</p>
         </div>
     </div>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
     <div class="nav-bar">
-        <button class="nav-item active" onclick="switchTab('feed', this)">
-            <div>◼</div>Радар
-        </button>
-        <button class="nav-item" onclick="switchTab('orders', this)">
-            <div>◎</div>Ордера
-        </button>
-        <button class="nav-item" onclick="switchTab('categories', this)">
-            <div>⚡</div>Площадки
-        </button>
-        <button class="nav-item" onclick="switchTab('profile', this)">
-            <div>👤</div>Профиль
-        </button>
+        <button class="nav-item active" onclick="switchTab('feed', this)"><div>◼</div>Радар</button>
+        <button class="nav-item" onclick="switchTab('orders', this)"><div>◎</div>Ордера</button>
+        <button class="nav-item" onclick="switchTab('categories', this)"><div>⚡</div>Курсы</button>
+        <button class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Профиль</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
+
+        // Сюда позже вставишь URL своего Python-сервера (например, через ngrok или VPS)
+        const BACKEND_API_URL = ""; 
 
         let selectedRegion = 'all';
         let savedOrders = [];
@@ -397,116 +316,124 @@
             selectedRegion = el.getAttribute('data-region');
         }
 
-        function runGlobalSearch() {
+        async function fetchMarketListings() {
             let query = document.getElementById('queryInput').value.trim();
             if (!query) {
-                tg.showAlert ? tg.showAlert('Введи название бренда или вещи для поиска!') : alert('Введи название бренда или вещи!');
+                tg.showAlert ? tg.showAlert('Введи бренд или модель!') : alert('Введи бренд или модель!');
                 return;
             }
 
-            let enc = encodeURIComponent(query);
-            let platforms = [
-                { name: 'Grailed (США / Мир)', region: 'eu_us', url: `https://www.grailed.com/shop?query=${enc}&sort=price_low_to_high`, tag: 'Сортировка: Дешевые' },
-                { name: 'Vinted (Европа)', region: 'eu_us', url: `https://www.vinted.com/catalog?search_text=${enc}&order=price_low_to_high`, tag: 'Евро-сток' },
-                { name: 'eBay (Глобал)', region: 'eu_us', url: `https://www.ebay.com/sch/i.html?_nkw=${enc}&_sop=15`, tag: 'Buy It Now + Дешевые' },
-                { name: 'Bunjang (Южная Корея)', region: 'asia', url: `https://m.bunjang.co.kr/search/products?q=${enc}&order=price_asc`, tag: 'Корея / Карго' },
-                { name: 'Mercari JP (Япония)', region: 'asia', url: `https://jp.mercari.com/search?keyword=${enc}&sort=price&order=asc`, tag: 'Японский архив' },
-                { name: 'Авито (РФ)', region: 'ru', url: `https://www.avito.ru/all?q=${enc}&s=1`, tag: 'Сначала дешевые' }
-            ];
+            let container = document.getElementById('resultsContainer');
+            let loader = document.getElementById('loader');
+            container.innerHTML = '';
+            loader.style.display = 'block';
 
-            let filtered = selectedRegion === 'all' ? platforms : platforms.filter(p => p.region === selectedRegion);
+            // Если подключен реальный Python-бэкенд — берем данные оттуда
+            if (BACKEND_API_URL) {
+                try {
+                    let res = await fetch(`${BACKEND_API_URL}/search?q=${encodeURIComponent(query)}&region=${selectedRegion}`);
+                    let data = await res.json();
+                    loader.style.display = 'none';
+                    renderCards(data.items);
+                    return;
+                } catch (e) {
+                    console.error('Ошибка связи с бэкендом, включаем локальный симулятор:', e);
+                }
+            }
+
+            // Демо-генератор реальной структуры ответа сервера (пока не поднял API)
+            setTimeout(() => {
+                loader.style.display = 'none';
+                let mockItems = [
+                    {
+                        title: `${query} (Archive / Mint)`,
+                        platform: 'Grailed • США',
+                        size: 'L',
+                        orig_price: '$340',
+                        rub_price: 28150,
+                        cargo: 2500,
+                        rf_avg_price: 44000,
+                        url: `https://www.grailed.com/shop?query=${encodeURIComponent(query)}&sort=price_low_to_high`
+                    },
+                    {
+                        title: `${query} (Vinted Euro Drop)`,
+                        platform: 'Vinted • Италия',
+                        size: 'M',
+                        orig_price: '€245',
+                        rub_price: 22420,
+                        cargo: 2200,
+                        rf_avg_price: 39500,
+                        url: `https://www.vinted.com/catalog?search_text=${encodeURIComponent(query)}&order=price_low_to_high`
+                    }
+                ];
+                renderCards(mockItems);
+            }, 600);
+        }
+
+        function renderCards(items) {
             let container = document.getElementById('resultsContainer');
             container.innerHTML = '';
 
-            filtered.forEach(p => {
+            items.forEach(item => {
+                let totalCost = item.rub_price + item.cargo;
+                let profit = item.rf_avg_price - totalCost;
+                let discountPct = Math.round((profit / item.rf_avg_price) * 100);
+                let badgeText = discountPct >= 25 ? `STEAL -${discountPct}%` : (discountPct > 0 ? `НИЖЕ РФ -${discountPct}%` : 'В РЫНКЕ');
+
                 container.innerHTML += `
                     <div class="card">
-                        <div class="badge">${p.tag}</div>
-                        <div class="title">${query}</div>
-                        <div class="info-grid" style="border:none; padding-top:4px;">
-                            <span>📍 Площадка: <b style="color:#fff;">${p.name}</b></span>
-                            <span>⚡ Прямой поиск с фильтром цены</span>
+                        <div class="card-top">
+                            <span class="badge">${badgeText}</span>
+                            <span class="badge badge-outline">${item.platform} • Размер ${item.size}</span>
+                        </div>
+                        <div class="title">${item.title}</div>
+                        <div class="price-row">
+                            <span class="price">${item.rub_price.toLocaleString('ru-RU')} ₽</span>
+                            <span class="orig-price">(${item.orig_price})</span>
+                        </div>
+                        <div class="analytics-box">
+                            <div class="analytics-row"><span>С учетом доставки/карго:</span><b>~${totalCost.toLocaleString('ru-RU')} ₽</b></div>
+                            <div class="analytics-row"><span>Медиана рынка РФ (Авито):</span><b>${item.rf_avg_price.toLocaleString('ru-RU')} ₽</b></div>
+                            <div class="analytics-row"><span>Потенциальный спред:</span><b>+${profit.toLocaleString('ru-RU')} ₽</b></div>
                         </div>
                         <div class="actions">
-                            <a href="${p.url}" target="_blank" class="btn btn-primary">Смотреть лоты</a>
-                            <button class="btn btn-secondary" onclick="saveOrder('${query.replace(/'/g, "\\'")}', '${p.name}')">+ В ордера</button>
+                            <a href="${item.url}" target="_blank" class="btn btn-primary">Открыть лот</a>
+                            <button class="btn btn-secondary" onclick="saveOrder('${item.title.replace(/'/g, "\\'")}', '${item.platform}', ${item.rub_price})">+ В ордера</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function triggerPhotoSearch() {
-            let msg = 'Чтобы найти вещь по фото через AI, закрой окно приложения и отправь скриншот или фотографию вещи прямо в чат с ботом!';
-            if (tg.showConfirm) {
-                tg.showConfirm(msg + ' Перейти в чат сейчас?', function(ok) {
-                    if (ok) tg.close();
-                });
-            } else {
-                alert(msg);
-                tg.close();
-            }
-        }
-
-        function saveOrder(title, platform) {
-            savedOrders.push({ title, platform, time: new Date().toLocaleTimeString().slice(0,5) });
+        function saveOrder(title, platform, price) {
+            savedOrders.push({ title, platform, price });
             renderOrders();
-            if (tg.showAlert) {
-                tg.showAlert(`Добавлено в ордера: ${title} (${platform})`);
-            } else {
-                alert(`Добавлено в ордера: ${title}`);
-            }
+            tg.showAlert ? tg.showAlert('Лот добавлен в отслеживаемые ордера!') : alert('Добавлено!');
         }
 
         function renderOrders() {
             let list = document.getElementById('ordersList');
-            if (savedOrders.length === 0) return;
+            if (!savedOrders.length) return;
             list.innerHTML = '';
-            savedOrders.forEach((item, idx) => {
+            savedOrders.forEach((o, i) => {
                 list.innerHTML += `
                     <div class="card">
-                        <div class="badge">Активный мониторинг • ${item.time}</div>
-                        <div class="title">${item.title}</div>
-                        <div class="info-grid" style="border:none; padding-top:4px;">
-                            <span>📍 Площадка: ${item.platform}</span>
-                        </div>
-                        <div class="actions">
-                            <button class="btn btn-secondary" onclick="removeOrder(${idx})">Удалить ордер</button>
-                        </div>
+                        <div class="card-top"><span class="badge">Мониторинг</span><span class="badge badge-outline">${o.platform}</span></div>
+                        <div class="title">${o.title}</div>
+                        <div class="price-row"><span class="price">${o.price.toLocaleString('ru-RU')} ₽</span></div>
+                        <button class="btn btn-secondary" style="width:100%" onclick="savedOrders.splice(${i},1); renderOrders();">Убрать</button>
                     </div>
                 `;
             });
-        }
-
-        function removeOrder(idx) {
-            savedOrders.splice(idx, 1);
-            if (savedOrders.length === 0) {
-                document.getElementById('ordersList').innerHTML = `
-                    <div class="empty-box">
-                        <h3>Активных ордеров нет</h3>
-                        <p>Нажимай «+ В ордера» на любом найденном лоте для мониторинга.</p>
-                    </div>
-                `;
-            } else {
-                renderOrders();
-            }
         }
 
         function switchTab(tabName, element) {
             document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
             document.getElementById('tab-' + tabName).classList.add('active');
             element.classList.add('active');
-
-            let titles = {
-                'feed': 'Danilin Radar ⚡',
-                'orders': 'Активные ордера 🎯',
-                'categories': 'Площадки & Карго 📂',
-                'profile': 'Профиль 👤'
-            };
-            document.getElementById('headerTitle').innerText = titles[tabName];
         }
     </script>
 </body>
 </html>
+ 
