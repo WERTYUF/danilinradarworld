@@ -15,12 +15,15 @@
             --accent: #ffffff;
             --accent-bg: #222222;
         }
+        * {
+            box-sizing: border-box;
+        }
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 0 0 70px 0;
+            padding: 0 0 75px 0;
         }
         .header {
             padding: 16px;
@@ -31,31 +34,88 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+        }
+        .search-terminal {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 4px;
+        }
+        .search-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .search-input {
+            flex: 1;
+            background: #000000;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: #555555;
+        }
+        .search-input:focus {
+            border-color: #ffffff;
+        }
+        .photo-btn {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 0 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .filters-bar {
             display: flex;
-            gap: 8px;
-            padding: 12px 16px;
+            gap: 6px;
             overflow-x: auto;
             scrollbar-width: none;
+            margin-bottom: 12px;
         }
         .filters-bar::-webkit-scrollbar {
             display: none;
         }
         .filter-chip {
-            background: var(--card-bg);
+            background: #000000;
             border: 1px solid var(--card-border);
             color: var(--text-sec);
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 12px;
+            font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
         }
         .filter-chip.active {
             background: #ffffff;
             color: #000000;
+            border-color: #ffffff;
+        }
+        .search-submit {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
         }
         .section-content {
             display: none;
@@ -99,7 +159,7 @@
             margin-bottom: 12px;
         }
         .price {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
@@ -114,9 +174,9 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             border-top: 1px solid var(--card-border);
-            padding-top: 12px;
+            padding-top: 10px;
         }
         .actions {
             display: flex;
@@ -151,7 +211,7 @@
             color: var(--text-sec);
             font-size: 14px;
         }
-        .profile-box h3 {
+        .profile-box h3, .empty-box h3 {
             color: var(--text-main);
             margin-top: 0;
         }
@@ -160,7 +220,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            height: 62px;
             background: var(--bg-color);
             border-top: 1px solid var(--card-border);
             display: flex;
@@ -193,99 +253,125 @@
 
     <div class="header">
         <span id="headerTitle">Danilin Radar ⚡</span>
-        <span style="font-size: 12px; color: var(--text-sec); font-weight: 500;">MONOCHROME</span>
+        <span style="font-size: 11px; color: var(--text-sec); font-weight: 600; border: 1px solid #222; padding: 3px 8px; border-radius: 6px;">GLOBAL</span>
     </div>
 
+    <!-- 1. ЛЕНТА И ПОИСК -->
     <div id="tab-feed" class="section-content active">
-        <div class="filters-bar">
-            <div class="filter-chip active">Все лоты</div>
-            <div class="filter-chip">Ниже рынка</div>
-            <div class="filter-chip">Карго / Мир</div>
-            <div class="filter-chip">Сортировка</div>
+        
+        <div class="search-terminal">
+            <div class="search-input-row">
+                <input type="text" id="queryInput" class="search-input" placeholder="Бренд, модель или артикул...">
+                <button class="photo-btn" onclick="triggerPhotoSearch()" title="Поиск по фото">📷</button>
+            </div>
+            
+            <div class="filters-bar" id="regionFilters">
+                <div class="filter-chip active" data-region="all" onclick="selectRegion(this)">🌍 Весь мир</div>
+                <div class="filter-chip" data-region="eu_us" onclick="selectRegion(this)">🇺🇸🇪🇺 США / Европа</div>
+                <div class="filter-chip" data-region="asia" onclick="selectRegion(this)">🇰🇷🇨🇳 Азия / Карго</div>
+                <div class="filter-chip" data-region="ru" onclick="selectRegion(this)">🇷🇺 РФ (Авито)</div>
+            </div>
+
+            <button class="search-submit" onclick="runGlobalSearch()">Найти лоты по миру</button>
         </div>
 
-        <div class="card">
-            <div class="badge">Ниже оценки рынка</div>
-            <div class="title">Stone Island Goggle Puffer Jacket</div>
-            <div class="price-row">
-                <span class="price">42 500 ₽</span>
-                <span class="discount">-24% от рынка</span>
+        <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Стартовые примеры / свежие находки -->
+            <div class="card">
+                <div class="badge">Ниже оценки рынка</div>
+                <div class="title">Stone Island Goggle Puffer Jacket</div>
+                <div class="price-row">
+                    <span class="price">42 500 ₽</span>
+                    <span class="discount">-24% от рынка</span>
+                </div>
+                <div class="info-grid">
+                    <span>Ориентир на Авито: 56 000 ₽</span>
+                    <span>📍 Площадка: Grailed (США / Мир)</span>
+                    <span>🕒 Найдено: 15 минут назад</span>
+                </div>
+                <div class="actions">
+                    <a href="https://www.grailed.com/shop/stone-island" target="_blank" class="btn btn-primary">Открыть лот</a>
+                    <button class="btn btn-secondary" onclick="saveOrder('Stone Island Goggle Puffer Jacket', 'Grailed')">Отслеживать</button>
+                </div>
             </div>
-            <div class="info-grid">
-                <span>Ориентир на Авито: 56 000 ₽</span>
-                <span>📍 Площадка: Grailed (США / Мир)</span>
-                <span>🕒 Найдено: 15 минут назад</span>
-            </div>
-            <div class="actions">
-                <a href="https://www.grailed.com" target="_blank" class="btn btn-primary">Открыть лот</a>
-                <button class="btn btn-secondary" onclick="alert('Лот добавлен в отслеживаемые!')">Отслеживать</button>
-            </div>
-        </div>
 
-        <div class="card">
-            <div class="badge">Steal Deal</div>
-            <div class="title">C.P. Company D.D. Shell Jacket</div>
-            <div class="price-row">
-                <span class="price">18 900 ₽</span>
-                <span class="discount">-35% стел</span>
-            </div>
-            <div class="info-grid">
-                <span>Ориентир на Авито: 29 000 ₽</span>
-                <span>📍 Площадка: Vinted (Европа)</span>
-                <span>🕒 Найдено: 1 час назад</span>
-            </div>
-            <div class="actions">
-                <a href="https://www.vinted.com" target="_blank" class="btn btn-primary">Открыть лот</a>
-                <button class="btn btn-secondary" onclick="alert('Лот добавлен в отслеживаемые!')">Отслеживать</button>
+            <div class="card">
+                <div class="badge">Steal Deal</div>
+                <div class="title">C.P. Company D.D. Shell Jacket</div>
+                <div class="price-row">
+                    <span class="price">18 900 ₽</span>
+                    <span class="discount">-35% стел</span>
+                </div>
+                <div class="info-grid">
+                    <span>Ориентир на Авито: 29 000 ₽</span>
+                    <span>📍 Площадка: Vinted (Европа)</span>
+                    <span>🕒 Найдено: 1 час назад</span>
+                </div>
+                <div class="actions">
+                    <a href="https://www.vinted.com/catalog?search_text=cp%20company" target="_blank" class="btn btn-primary">Открыть лот</a>
+                    <button class="btn btn-secondary" onclick="saveOrder('C.P. Company D.D. Shell Jacket', 'Vinted')">Отслеживать</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- 2. ОРДЕРА / СЛЕЖЕНИЯ -->
     <div id="tab-orders" class="section-content">
-        <div class="empty-box">
-            <h3>Активных ордеров нет</h3>
-            <p>Добавляй товары в отслеживание из ленты или через бота в Telegram, чтобы мониторить падение цен в реальном времени.</p>
+        <div id="ordersList" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="empty-box" id="emptyOrdersBox">
+                <h3>Активных ордеров нет</h3>
+                <p>Нажимай «Отслеживать» на любом найденном лоте или отправь фото вещи в бота для автоматического мониторинга.</p>
+            </div>
         </div>
     </div>
 
+    <!-- 3. КАТЕГОРИИ / ПЛОЩАДКИ -->
     <div id="tab-categories" class="section-content">
         <div class="card">
-            <div class="title">🌍 Мировые ресейл-площадки</div>
+            <div class="title">🇺🇸🇪🇺 США и Европа</div>
             <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
-                <span>• Grailed & Vinted (США, Европа)</span>
-                <span>• eBay & Depop (Глобальный сток)</span>
-                <span>• Kream & Bunjang (Южная Корея / Карго)</span>
-                <span>• Goofish & Poizon (Китай)</span>
-                <span>• Mercari JP (Япония)</span>
+                <span>• Grailed — архив, стритвир, люкс</span>
+                <span>• Vinted — европейский локальный ресейл</span>
+                <span>• Vestiaire Collective — премиум и винтаж</span>
+                <span>• eBay / Depop — мировые аукционы</span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="title">🇰🇷🇨🇳🇯🇵 Азия и Карго</div>
+            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
+                <span>• Bunjang / Kream — Южная Корея</span>
+                <span>• Goofish (Xianyu) / Poizon — Китай</span>
+                <span>• Mercari JP / Yahoo Auctions — Япония</span>
             </div>
         </div>
         <div class="card">
             <div class="title">🇷🇺 Локальный рынок</div>
             <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
-                <span>• Авито (Поиск с фильтром от дешевых)</span>
-                <span>• Telegram-каналы байеров</span>
+                <span>• Авито — фильтр от дешевых по РФ</span>
             </div>
         </div>
     </div>
 
+    <!-- 4. ПРОФИЛЬ -->
     <div id="tab-profile" class="section-content">
         <div class="profile-box">
             <h3 id="userName">Danilin Reseller</h3>
             <p>Статус: <b style="color:#fff;">VIP / Admin</b></p>
-            <p>Доступных платформ: <b>14+</b></p>
+            <p>Режим сканера: <b>Global Multi-Market</b></p>
             <p style="font-size: 12px; color: #555; margin-top: 15px;" id="userIdInfo">Telegram ID: загрузка...</p>
         </div>
     </div>
 
+    <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="switchTab('feed', this)">
-            <div>◼</div>Лента
+            <div>◼</div>Радар
         </button>
         <button class="nav-item" onclick="switchTab('orders', this)">
             <div>◎</div>Ордера
         </button>
         <button class="nav-item" onclick="switchTab('categories', this)">
-            <div>⚡</div>Категории
+            <div>⚡</div>Площадки
         </button>
         <button class="nav-item" onclick="switchTab('profile', this)">
             <div>👤</div>Профиль
@@ -296,19 +382,119 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
+        let selectedRegion = 'all';
+        let savedOrders = [];
+
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             let u = tg.initDataUnsafe.user;
             document.getElementById('userName').innerText = u.first_name + (u.last_name ? ' ' + u.last_name : '');
             document.getElementById('userIdInfo').innerText = 'Telegram ID: ' + u.id;
         }
 
+        function selectRegion(el) {
+            document.querySelectorAll('#regionFilters .filter-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedRegion = el.getAttribute('data-region');
+        }
+
+        function runGlobalSearch() {
+            let query = document.getElementById('queryInput').value.trim();
+            if (!query) {
+                tg.showAlert ? tg.showAlert('Введи название бренда или вещи для поиска!') : alert('Введи название бренда или вещи!');
+                return;
+            }
+
+            let enc = encodeURIComponent(query);
+            let platforms = [
+                { name: 'Grailed (США / Мир)', region: 'eu_us', url: `https://www.grailed.com/shop?query=${enc}&sort=price_low_to_high`, tag: 'Сортировка: Дешевые' },
+                { name: 'Vinted (Европа)', region: 'eu_us', url: `https://www.vinted.com/catalog?search_text=${enc}&order=price_low_to_high`, tag: 'Евро-сток' },
+                { name: 'eBay (Глобал)', region: 'eu_us', url: `https://www.ebay.com/sch/i.html?_nkw=${enc}&_sop=15`, tag: 'Buy It Now + Дешевые' },
+                { name: 'Bunjang (Южная Корея)', region: 'asia', url: `https://m.bunjang.co.kr/search/products?q=${enc}&order=price_asc`, tag: 'Корея / Карго' },
+                { name: 'Mercari JP (Япония)', region: 'asia', url: `https://jp.mercari.com/search?keyword=${enc}&sort=price&order=asc`, tag: 'Японский архив' },
+                { name: 'Авито (РФ)', region: 'ru', url: `https://www.avito.ru/all?q=${enc}&s=1`, tag: 'Сначала дешевые' }
+            ];
+
+            let filtered = selectedRegion === 'all' ? platforms : platforms.filter(p => p.region === selectedRegion);
+            let container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            filtered.forEach(p => {
+                container.innerHTML += `
+                    <div class="card">
+                        <div class="badge">${p.tag}</div>
+                        <div class="title">${query}</div>
+                        <div class="info-grid" style="border:none; padding-top:4px;">
+                            <span>📍 Площадка: <b style="color:#fff;">${p.name}</b></span>
+                            <span>⚡ Прямой поиск с фильтром цены</span>
+                        </div>
+                        <div class="actions">
+                            <a href="${p.url}" target="_blank" class="btn btn-primary">Смотреть лоты</a>
+                            <button class="btn btn-secondary" onclick="saveOrder('${query.replace(/'/g, "\\'")}', '${p.name}')">+ В ордера</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function triggerPhotoSearch() {
+            let msg = 'Чтобы найти вещь по фото через AI, закрой окно приложения и отправь скриншот или фотографию вещи прямо в чат с ботом!';
+            if (tg.showConfirm) {
+                tg.showConfirm(msg + ' Перейти в чат сейчас?', function(ok) {
+                    if (ok) tg.close();
+                });
+            } else {
+                alert(msg);
+                tg.close();
+            }
+        }
+
+        function saveOrder(title, platform) {
+            savedOrders.push({ title, platform, time: new Date().toLocaleTimeString().slice(0,5) });
+            renderOrders();
+            if (tg.showAlert) {
+                tg.showAlert(`Добавлено в ордера: ${title} (${platform})`);
+            } else {
+                alert(`Добавлено в ордера: ${title}`);
+            }
+        }
+
+        function renderOrders() {
+            let list = document.getElementById('ordersList');
+            if (savedOrders.length === 0) return;
+            list.innerHTML = '';
+            savedOrders.forEach((item, idx) => {
+                list.innerHTML += `
+                    <div class="card">
+                        <div class="badge">Активный мониторинг • ${item.time}</div>
+                        <div class="title">${item.title}</div>
+                        <div class="info-grid" style="border:none; padding-top:4px;">
+                            <span>📍 Площадка: ${item.platform}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-secondary" onclick="removeOrder(${idx})">Удалить ордер</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function removeOrder(idx) {
+            savedOrders.splice(idx, 1);
+            if (savedOrders.length === 0) {
+                document.getElementById('ordersList').innerHTML = `
+                    <div class="empty-box">
+                        <h3>Активных ордеров нет</h3>
+                        <p>Нажимай «+ В ордера» на любом найденном лоте для мониторинга.</p>
+                    </div>
+                `;
+            } else {
+                renderOrders();
+            }
+        }
+
         function switchTab(tabName, element) {
-            document.querySelectorAll('.section-content').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('active');
-            });
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
             document.getElementById('tab-' + tabName).classList.add('active');
             element.classList.add('active');
