@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Danilin Radar</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --card-border: #222222;
+            --text-main: #ffffff;
+            --text-sec: #888888;
+            --accent: #ffffff;
+            --accent-bg: #222222;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0 0 70px 0;
+        }
+        .header {
+            padding: 16px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .filters-bar {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .filters-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-chip {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-sec);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .filter-chip.active {
+            background: #ffffff;
+            color: #000000;
+        }
+        .section-content {
+            display: none;
+            padding: 12px 16px;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .section-content.active {
+            display: flex;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--accent-bg);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            border: 1px solid #333333;
+        }
+        .title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .price {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .discount {
+            color: var(--text-sec);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .info-grid {
+            font-size: 13px;
+            color: var(--text-sec);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 16px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 12px;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+        }
+        .btn-secondary {
+            background: #1a1a1a;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+        .profile-box, .empty-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-sec);
+            font-size: 14px;
+        }
+        .profile-box h3 {
+            color: var(--text-main);
+            margin-top: 0;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-color);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+        .nav-item {
+            color: var(--text-sec);
+            font-size: 11px;
+            text-align: center;
+            text-decoration: none;
+            flex: 1;
+            font-weight: 500;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .nav-item.active {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .nav-item div {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <span id="headerTitle">Danilin Radar ⚡</span>
+        <span style="font-size: 12px; color: var(--text-sec); font-weight: 500;">MONOCHROME</span>
+    </div>
+
+    <div id="tab-feed" class="section-content active">
+        <div class="filters-bar">
+            <div class="filter-chip active">Все лоты</div>
+            <div class="filter-chip">Ниже рынка</div>
+            <div class="filter-chip">Карго / Мир</div>
+            <div class="filter-chip">Сортировка</div>
+        </div>
+
+        <div class="card">
+            <div class="badge">Ниже оценки рынка</div>
+            <div class="title">Stone Island Goggle Puffer Jacket</div>
+            <div class="price-row">
+                <span class="price">42 500 ₽</span>
+                <span class="discount">-24% от рынка</span>
+            </div>
+            <div class="info-grid">
+                <span>Ориентир на Авито: 56 000 ₽</span>
+                <span>📍 Площадка: Grailed (США / Мир)</span>
+                <span>🕒 Найдено: 15 минут назад</span>
+            </div>
+            <div class="actions">
+                <a href="https://www.grailed.com" target="_blank" class="btn btn-primary">Открыть лот</a>
+                <button class="btn btn-secondary" onclick="alert('Лот добавлен в отслеживаемые!')">Отслеживать</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="badge">Steal Deal</div>
+            <div class="title">C.P. Company D.D. Shell Jacket</div>
+            <div class="price-row">
+                <span class="price">18 900 ₽</span>
+                <span class="discount">-35% стел</span>
+            </div>
+            <div class="info-grid">
+                <span>Ориентир на Авито: 29 000 ₽</span>
+                <span>📍 Площадка: Vinted (Европа)</span>
+                <span>🕒 Найдено: 1 час назад</span>
+            </div>
+            <div class="actions">
+                <a href="https://www.vinted.com" target="_blank" class="btn btn-primary">Открыть лот</a>
+                <button class="btn btn-secondary" onclick="alert('Лот добавлен в отслеживаемые!')">Отслеживать</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-orders" class="section-content">
+        <div class="empty-box">
+            <h3>Активных ордеров нет</h3>
+            <p>Добавляй товары в отслеживание из ленты или через бота в Telegram, чтобы мониторить падение цен в реальном времени.</p>
+        </div>
+    </div>
+
+    <div id="tab-categories" class="section-content">
+        <div class="card">
+            <div class="title">🌍 Мировые ресейл-площадки</div>
+            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
+                <span>• Grailed & Vinted (США, Европа)</span>
+                <span>• eBay & Depop (Глобальный сток)</span>
+                <span>• Kream & Bunjang (Южная Корея / Карго)</span>
+                <span>• Goofish & Poizon (Китай)</span>
+                <span>• Mercari JP (Япония)</span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="title">🇷🇺 Локальный рынок</div>
+            <div class="info-grid" style="border:none; padding:0; margin-top:8px;">
+                <span>• Авито (Поиск с фильтром от дешевых)</span>
+                <span>• Telegram-каналы байеров</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-profile" class="section-content">
+        <div class="profile-box">
+            <h3 id="userName">Danilin Reseller</h3>
+            <p>Статус: <b style="color:#fff;">VIP / Admin</b></p>
+            <p>Доступных платформ: <b>14+</b></p>
+            <p style="font-size: 12px; color: #555; margin-top: 15px;" id="userIdInfo">Telegram ID: загрузка...</p>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="switchTab('feed', this)">
+            <div>◼</div>Лента
+        </button>
+        <button class="nav-item" onclick="switchTab('orders', this)">
+            <div>◎</div>Ордера
+        </button>
+        <button class="nav-item" onclick="switchTab('categories', this)">
+            <div>⚡</div>Категории
+        </button>
+        <button class="nav-item" onclick="switchTab('profile', this)">
+            <div>👤</div>Профиль
+        </button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            let u = tg.initDataUnsafe.user;
+            document.getElementById('userName').innerText = u.first_name + (u.last_name ? ' ' + u.last_name : '');
+            document.getElementById('userIdInfo').innerText = 'Telegram ID: ' + u.id;
+        }
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            element.classList.add('active');
+
+            let titles = {
+                'feed': 'Danilin Radar ⚡',
+                'orders': 'Активные ордера 🎯',
+                'categories': 'Площадки & Карго 📂',
+                'profile': 'Профиль 👤'
+            };
+            document.getElementById('headerTitle').innerText = titles[tabName];
+        }
+    </script>
+</body>
+</html>
