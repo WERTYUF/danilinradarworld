@@ -7,367 +7,218 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #000000;
-            --card-bg: #111111;
-            --card-border: #222222;
-            --text-main: #ffffff;
-            --text-sec: #888888;
-            --accent: #ffffff;
-            --accent-bg: #1c1c1c;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent-color: #f39c12;
+            --text-color: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-color: #2c2c2c;
+            --green: #2ecc71;
         }
-        * { box-sizing: border-box; }
+
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
             margin: 0;
-            padding: 0 0 75px 0;
+            padding: 12px;
+            padding-bottom: 80px;
         }
+
         .header {
-            padding: 16px;
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--card-border);
-            position: sticky;
-            top: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
-            z-index: 50;
+            margin-bottom: 16px;
         }
-        .search-terminal {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 14px;
-            margin-bottom: 4px;
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
         }
-        .search-input-row {
+
+        .badge-mode {
+            background: #2c2c2c;
+            color: var(--accent-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .search-box {
             display: flex;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
         }
-        .search-input {
+
+        input {
             flex: 1;
-            background: #000000;
-            border: 1px solid #333333;
-            color: #ffffff;
-            padding: 12px 14px;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-color);
             font-size: 14px;
             outline: none;
         }
-        .search-input:focus { border-color: #ffffff; }
-        .filters-bar {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            margin-bottom: 12px;
+
+        input:focus {
+            border-color: var(--accent-color);
         }
-        .filters-bar::-webkit-scrollbar { display: none; }
-        .filter-chip {
-            background: #000000;
-            border: 1px solid var(--card-border);
-            color: var(--text-sec);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .filter-chip.active {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
-        }
-        .search-submit {
-            width: 100%;
-            background: #ffffff;
-            color: #000000;
+
+        button.search-btn {
+            background: var(--accent-color);
             border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 800;
+            border-radius: 10px;
+            padding: 0 16px;
+            color: #000;
+            font-weight: bold;
             font-size: 14px;
             cursor: pointer;
         }
-        .section-content {
+
+        .loader {
             display: none;
-            padding: 12px 16px;
-            flex-direction: column;
-            gap: 12px;
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
         }
-        .section-content.active { display: flex; }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 16px;
-            position: relative;
+
+        .listing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
         }
-        .card-top {
+
+        .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
             margin-bottom: 10px;
-        }
-        .badge {
-            display: inline-block;
-            background: #ffffff;
-            color: #000000;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .badge-outline {
-            background: transparent;
-            color: var(--text-sec);
-            border: 1px solid #333333;
-        }
-        .title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
             line-height: 1.3;
         }
+
         .price-row {
             display: flex;
             align-items: baseline;
             gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .rub-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .orig-price {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .analytics-block {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
             margin-bottom: 12px;
         }
-        .price {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-        .orig-price {
-            color: var(--text-sec);
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .analytics-box {
-            background: #080808;
-            border: 1px solid #1f1f1f;
-            border-radius: 12px;
-            padding: 10px 12px;
-            margin-bottom: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 12px;
-        }
+
         .analytics-row {
             display: flex;
             justify-content: space-between;
-            color: var(--text-sec);
+            margin-bottom: 4px;
+            color: var(--text-secondary);
         }
-        .analytics-row b {
-            color: var(--text-main);
+
+        .analytics-row:last-child {
+            margin-bottom: 0;
+            font-weight: bold;
+            color: var(--green);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 4px;
+        }
+
+        .btn-open {
+            display: block;
+            width: 100%;
+            background: #2c2c2c;
+            color: var(--text-color);
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
             font-weight: 600;
         }
-        .actions {
-            display: flex;
-            gap: 8px;
+
+        .btn-open:active {
+            background: #3c3c3c;
         }
-        .btn {
-            flex: 1;
-            padding: 11px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-        }
-        .btn-primary { background: #ffffff; color: #000000; }
-        .btn-secondary { background: #1a1a1a; color: var(--text-main); border: 1px solid var(--card-border); }
-        .loader {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-sec);
-            font-size: 13px;
-            display: none;
-        }
-        .nav-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 62px;
-            background: var(--bg-color);
-            border-top: 1px solid var(--card-border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
-        }
-        .nav-item {
-            color: var(--text-sec);
-            font-size: 11px;
-            text-align: center;
-            flex: 1;
-            font-weight: 500;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        .nav-item.active { color: var(--text-main); font-weight: 700; }
-        .nav-item div { font-size: 18px; margin-bottom: 2px; }
-        .empty-box, .profile-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            color: var(--text-sec);
-            font-size: 14px;
-        }
-        .empty-box h3, .profile-box h3 { color: var(--text-main); margin-top: 0; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <span id="headerTitle">Danilin Radar ⚡</span>
-        <span style="font-size: 11px; color: var(--text-sec); font-weight: 600; border: 1px solid #222; padding: 3px 8px; border-radius: 6px;">ARBITRAGE</span>
+        <div class="logo">Danilin Radar ⚡</div>
+        <div class="badge-mode">ARBITRAGE</div>
     </div>
 
-    <div id="tab-feed" class="section-content active">
-        <div class="search-terminal">
-            <div class="search-input-row">
-                <input type="text" id="queryInput" class="search-input" placeholder="Например: Stone Island Goggle или C.P. Company">
-            </div>
-            
-            <div class="filters-bar" id="regionFilters">
-                <div class="filter-chip active" data-region="all" onclick="selectRegion(this)">🌍 Все рынки</div>
-                <div class="filter-chip" data-region="us_eu" onclick="selectRegion(this)">🇺🇸🇪🇺 Grailed / Vinted</div>
-                <div class="filter-chip" data-region="asia" onclick="selectRegion(this)">🇰🇷🇨🇳 Азия / Карго</div>
-            </div>
-
-            <button class="search-submit" onclick="fetchMarketListings()">Сканировать объявления и рынок РФ</button>
-        </div>
-
-        <div id="loader" class="loader">⚡ Сканируем мировые площадки и сверяем цены с Авито...</div>
-        <div id="resultsContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    <div class="search-box">
+        <input type="text" id="queryInput" placeholder="Бренд или модель (напр. Stone Island)" value="Stone Island">
+        <button class="search-btn" onclick="fetchMarketListings()">Искать</button>
     </div>
 
-    <div id="tab-orders" class="section-content">
-        <div id="ordersList" style="display: flex; flex-direction: column; gap: 12px;">
-            <div class="empty-box">
-                <h3>Активных ордеров нет</h3>
-                <p>Сохраняй выгодные лоты из выдачи, чтобы следить за изменением цены.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-categories" class="section-content">
-        <div class="card">
-            <div class="title">📊 Курсы конвертации терминала</div>
-            <div class="analytics-box" style="margin-bottom:0;">
-                <div class="analytics-row"><span>USD ➔ RUB</span><b>82.80 ₽</b></div>
-                <div class="analytics-row"><span>EUR ➔ RUB</span><b>91.50 ₽</b></div>
-                <div class="analytics-row"><span>Закладываемое карго</span><b>+2 500 ₽</b></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-profile" class="section-content">
-        <div class="profile-box">
-            <h3 id="userName">Danilin Reseller</h3>
-            <p>Статус: <b style="color:#fff;">VIP / Admin</b></p>
-            <p style="font-size: 12px; color: #555;" id="userIdInfo">Telegram ID: загрузка...</p>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <button class="nav-item active" onclick="switchTab('feed', this)"><div>◼</div>Радар</button>
-        <button class="nav-item" onclick="switchTab('orders', this)"><div>◎</div>Ордера</button>
-        <button class="nav-item" onclick="switchTab('categories', this)"><div>⚡</div>Курсы</button>
-        <button class="nav-item" onclick="switchTab('profile', this)"><div>👤</div>Профиль</button>
-    </div>
+    <div id="loader" class="loader">Сканируем Grailed и рынок РФ...</div>
+    <div id="resultsContainer"></div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Сюда позже вставишь URL своего Python-сервера (например, через ngrok или VPS)
-        const BACKEND_API_URL = "https://jlhgl-172-93-107-166.run.pinggy-free.link"; 
-
-        let selectedRegion = 'all';
-        let savedOrders = [];
-
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            let u = tg.initDataUnsafe.user;
-            document.getElementById('userName').innerText = u.first_name + (u.last_name ? ' ' + u.last_name : '');
-            document.getElementById('userIdInfo').innerText = 'Telegram ID: ' + u.id;
-        }
-
-        function selectRegion(el) {
-            document.querySelectorAll('#regionFilters .filter-chip').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            selectedRegion = el.getAttribute('data-region');
-        }
+        // ТВОЯ АКТУАЛЬНАЯ ССЫЛКА ОТ PINGGY (заменяй ее, если перезапустишь туннель)
+        const BACKEND_API_URL = "https://jlhgl-172-93-107-166.run.pinggy-free.link";
 
         async function fetchMarketListings() {
             let query = document.getElementById('queryInput').value.trim();
             if (!query) {
-                tg.showAlert ? tg.showAlert('Введи бренд или модель!') : alert('Введи бренд или модель!');
+                alert('Введи поисковый запрос!');
                 return;
             }
 
             let container = document.getElementById('resultsContainer');
             let loader = document.getElementById('loader');
+            
             container.innerHTML = '';
             loader.style.display = 'block';
 
-            // Если подключен реальный Python-бэкенд — берем данные оттуда
-            if (BACKEND_API_URL) {
-                try {
-                    let res = await fetch(`${BACKEND_API_URL}/search?q=${encodeURIComponent(query)}&region=${selectedRegion}`);
-                    let data = await res.json();
-                    loader.style.display = 'none';
-                    renderCards(data.items);
-                    return;
-                } catch (e) {
-                    console.error('Ошибка связи с бэкендом, включаем локальный симулятор:', e);
-                }
-            }
-
-            // Демо-генератор реальной структуры ответа сервера (пока не поднял API)
-            setTimeout(() => {
+            try {
+                let response = await fetch(`${BACKEND_API_URL}/search?q=${encodeURIComponent(query)}`);
+                let data = await response.json();
+                
                 loader.style.display = 'none';
-                let mockItems = [
-                    {
-                        title: `${query} (Archive / Mint)`,
-                        platform: 'Grailed • США',
-                        size: 'L',
-                        orig_price: '$340',
-                        rub_price: 28150,
-                        cargo: 2500,
-                        rf_avg_price: 44000,
-                        url: `https://www.grailed.com/shop?query=${encodeURIComponent(query)}&sort=price_low_to_high`
-                    },
-                    {
-                        title: `${query} (Vinted Euro Drop)`,
-                        platform: 'Vinted • Италия',
-                        size: 'M',
-                        orig_price: '€245',
-                        rub_price: 22420,
-                        cargo: 2200,
-                        rf_avg_price: 39500,
-                        url: `https://www.vinted.com/catalog?search_text=${encodeURIComponent(query)}&order=price_low_to_high`
-                    }
-                ];
-                renderCards(mockItems);
-            }, 600);
+
+                if (data.items && data.items.length > 0) {
+                    renderCards(data.items);
+                } else {
+                    container.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">Ничего не найдено</div>';
+                }
+            } catch (err) {
+                loader.style.display = 'none';
+                console.error(err);
+                alert('Ошибка соединения с бэкендом на телефоне!');
+            }
         }
 
         function renderCards(items) {
@@ -376,63 +227,44 @@
 
             items.forEach(item => {
                 let totalCost = item.rub_price + item.cargo;
-                let profit = item.rf_avg_price - totalCost;
-                let discountPct = Math.round((profit / item.rf_avg_price) * 100);
-                let badgeText = discountPct >= 25 ? `STEAL -${discountPct}%` : (discountPct > 0 ? `НИЖЕ РФ -${discountPct}%` : 'В РЫНКЕ');
-
-                container.innerHTML += `
-                    <div class="card">
-                        <div class="card-top">
-                            <span class="badge">${badgeText}</span>
-                            <span class="badge badge-outline">${item.platform} • Размер ${item.size}</span>
+                let spread = item.rf_avg_price - totalCost;
+                
+                let card = document.createElement('div');
+                card.className = 'listing-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>${item.platform}</span>
+                        <span>РАЗМЕР: ${item.size}</span>
+                    </div>
+                    <div class="card-title">${item.title}</div>
+                    <div class="price-row">
+                        <span class="rub-price">${item.rub_price.toLocaleString()} ₽</span>
+                        <span class="orig-price">(${item.orig_price})</span>
+                    </div>
+                    <div class="analytics-block">
+                        <div class="analytics-row">
+                            <span>С учетом доставки:</span>
+                            <span>~${totalCost.toLocaleString()} ₽</span>
                         </div>
-                        <div class="title">${item.title}</div>
-                        <div class="price-row">
-                            <span class="price">${item.rub_price.toLocaleString('ru-RU')} ₽</span>
-                            <span class="orig-price">(${item.orig_price})</span>
+                        <div class="analytics-row">
+                            <span>Медиана рынка РФ (Авито):</span>
+                            <span>${item.rf_avg_price.toLocaleString()} ₽</span>
                         </div>
-                        <div class="analytics-box">
-                            <div class="analytics-row"><span>С учетом доставки/карго:</span><b>~${totalCost.toLocaleString('ru-RU')} ₽</b></div>
-                            <div class="analytics-row"><span>Медиана рынка РФ (Авито):</span><b>${item.rf_avg_price.toLocaleString('ru-RU')} ₽</b></div>
-                            <div class="analytics-row"><span>Потенциальный спред:</span><b>+${profit.toLocaleString('ru-RU')} ₽</b></div>
-                        </div>
-                        <div class="actions">
-                            <a href="${item.url}" target="_blank" class="btn btn-primary">Открыть лот</a>
-                            <button class="btn btn-secondary" onclick="saveOrder('${item.title.replace(/'/g, "\\'")}', '${item.platform}', ${item.rub_price})">+ В ордера</button>
+                        <div class="analytics-row">
+                            <span>Потенциальный спред:</span>
+                            <span>+${spread.toLocaleString()} ₽</span>
                         </div>
                     </div>
+                    <a href="${item.url}" target="_blank" class="btn-open">Открыть лот</a>
                 `;
+                container.appendChild(card);
             });
         }
 
-        function saveOrder(title, platform, price) {
-            savedOrders.push({ title, platform, price });
-            renderOrders();
-            tg.showAlert ? tg.showAlert('Лот добавлен в отслеживаемые ордера!') : alert('Добавлено!');
-        }
-
-        function renderOrders() {
-            let list = document.getElementById('ordersList');
-            if (!savedOrders.length) return;
-            list.innerHTML = '';
-            savedOrders.forEach((o, i) => {
-                list.innerHTML += `
-                    <div class="card">
-                        <div class="card-top"><span class="badge">Мониторинг</span><span class="badge badge-outline">${o.platform}</span></div>
-                        <div class="title">${o.title}</div>
-                        <div class="price-row"><span class="price">${o.price.toLocaleString('ru-RU')} ₽</span></div>
-                        <button class="btn btn-secondary" style="width:100%" onclick="savedOrders.splice(${i},1); renderOrders();">Убрать</button>
-                    </div>
-                `;
-            });
-        }
-
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            element.classList.add('active');
-        }
+        // Автоматически запускаем поиск при открытии мини-приложения
+        window.onload = () => {
+            fetchMarketListings();
+        };
     </script>
 </body>
 </html>
