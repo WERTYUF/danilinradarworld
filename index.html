@@ -98,9 +98,9 @@ details summary{cursor:pointer;padding:2px 0}
 <script>
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
-// Если страница лежит НЕ на сервере radar.py, впиши сюда адрес сервера без слэша в конце,
-// например "https://abc123.serveousercontent.com". Если страницу отдаёт radar.py, оставь пусто.
-const API_BASE = "";
+//  https://dddcd798155fe5dc-172-93-107-166.serveousercontent.com
+//  "https://dddcd798155fe5dc-172-93-107-166.serveousercontent.com".
+const API_BASE = "https://dddcd798155fe5dc-172-93-107-166.serveousercontent.com";
 const INIT = tg ? tg.initData : "";
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
