@@ -17,6 +17,7 @@
             --accent-bg: #ffffff;
             --accent-text: #000000;
             --green: #00ff66;
+            --red: #ff3b30;
         }
 
         body {
@@ -101,10 +102,14 @@
 
         .filters-panel {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 14px;
             overflow-x: auto;
             padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .filters-panel::-webkit-scrollbar {
+            display: none;
         }
 
         .filter-chip {
@@ -122,6 +127,7 @@
             border-color: var(--text);
             color: var(--text);
             background: #1a1a1a;
+            font-weight: 700;
         }
 
         .loader {
@@ -194,11 +200,13 @@
         .analytics-row:last-child {
             margin-bottom: 0;
             font-weight: 800;
-            color: var(--green);
             border-top: 1px solid var(--border);
             padding-top: 4px;
             margin-top: 4px;
         }
+
+        .profit-plus { color: var(--green); }
+        .profit-minus { color: var(--red); }
 
         .card-actions {
             display: flex;
@@ -252,15 +260,16 @@
         </div>
 
         <div class="filters-panel">
-            <div class="filter-chip active" onclick="setFilter('all', this)">Все рынки</div>
-            <div class="filter-chip" onclick="setFilter('china', this)">🇨🇳 Китай (Goofish)</div>
-            <div class="filter-chip" onclick="setFilter('japan', this)">🇯🇵 Япония (Yahoo/Mercari)</div>
-            <div class="filter-chip" onclick="setFilter('korea', this)">🇰🇷 Корея</div>
-            <div class="filter-chip" onclick="setFilter('grailed', this)">Grailed</div>
-            <div class="filter-chip" onclick="setFilter('vinted', this)">Vinted</div>
+            <div class="filter-chip active" onclick="setMarketFilter('all', this)">Все рынки</div>
+            <div class="filter-chip" onclick="setMarketFilter('china', this)">🇨🇳 Китай (Goofish)</div>
+            <div class="filter-chip" onclick="setMarketFilter('japan', this)">🇯🇵 Япония</div>
+            <div class="filter-chip" onclick="setMarketFilter('korea', this)">🇰🇷 Корея</div>
+            <div class="filter-chip" onclick="setMarketFilter('grailed', this)">Grailed</div>
+            <div class="filter-chip" onclick="setMarketFilter('vinted', this)">Vinted</div>
+            <div class="filter-chip" onclick="setMarketFilter('india', this)">🇮🇳 Индия</div>
         </div>
 
-        <div id="loader" class="loader">СКАНИРУЕМ КИТАЙ, ЯПОНИЮ И МИР...</div>
+        <div id="loader" class="loader">СКАНИРУЕМ МИРОВЫЕ РЫНКИ...</div>
         <div id="resultsContainer"></div>
     </div>
 
@@ -272,8 +281,9 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        const BACKEND_API_URL = "https://c47f31c5e1859a56-195-3-220-4.serveousercontent.com";
+        const BACKEND_API_URL = "https://3435ff5e8c2ed610-162-249-127-174.serveousercontent.com";
         let currentItems = [];
+        let activeMarket = 'all';
         let favorites = JSON.parse(localStorage.getItem('danilin_favs') || '[]');
 
         updateFavCount();
@@ -303,7 +313,7 @@
                 loader.style.display = 'none';
                 if (data.items) {
                     currentItems = data.items;
-                    renderCards(currentItems, container);
+                    applyMarketFilter();
                 } else {
                     container.innerHTML = '<div style="text-align: center; color: #777; padding: 30px;">Пусто</div>';
                 }
@@ -311,6 +321,25 @@
                 loader.style.display = 'none';
                 alert('Ошибка соединения с бэкендом!');
             }
+        }
+
+        function setMarketFilter(market, el) {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            activeMarket = market;
+            applyMarketFilter();
+        }
+
+        function applyMarketFilter() {
+            let filtered = [...currentItems];
+            if (activeMarket === 'china') filtered = filtered.filter(i => i.platform.includes('Китай'));
+            if (activeMarket === 'japan') filtered = filtered.filter(i => i.platform.includes('Япония'));
+            if (activeMarket === 'korea') filtered = filtered.filter(i => i.platform.includes('Корея'));
+            if (activeMarket === 'grailed') filtered = filtered.filter(i => i.platform.includes('Grailed'));
+            if (activeMarket === 'vinted') filtered = filtered.filter(i => i.platform.includes('Vinted'));
+            if (activeMarket === 'india') filtered = filtered.filter(i => i.platform.includes('Индия'));
+
+            renderCards(filtered, document.getElementById('resultsContainer'));
         }
 
         function renderCards(items, container) {
@@ -324,6 +353,8 @@
                 let totalCost = item.rub_price + item.cargo;
                 let spread = item.rf_avg_price - totalCost;
                 let isFav = favorites.some(f => f.id === item.id);
+                let spreadSign = spread >= 0 ? '+' : '';
+                let spreadClass = spread >= 0 ? 'profit-plus' : 'profit-minus';
 
                 let card = document.createElement('div');
                 card.className = 'listing-card';
@@ -346,9 +377,9 @@
                             <span>Рынок РФ (Авито):</span>
                             <span>${item.rf_avg_price.toLocaleString()} ₽</span>
                         </div>
-                        <div class="analytics-row">
+                        <div class="analytics-row ${spreadClass}">
                             <span>Потенциальный профит:</span>
-                            <span>+${spread.toLocaleString()} ₽</span>
+                            <span>${spreadSign}${spread.toLocaleString()} ₽</span>
                         </div>
                     </div>
                     <div class="card-actions">
@@ -373,7 +404,7 @@
             if (document.getElementById('favView').style.display === 'block') {
                 renderFavorites();
             } else {
-                renderCards(currentItems, document.getElementById('resultsContainer'));
+                applyMarketFilter();
             }
         }
 
@@ -386,23 +417,9 @@
             document.getElementById('favCount').innerText = favorites.length;
         }
 
-        function setFilter(type, el) {
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            
-            let filtered = [...currentItems];
-            if (type === 'china') filtered = filtered.filter(i => i.platform.includes('Китай'));
-            if (type === 'japan') filtered = filtered.filter(i => i.platform.includes('Япония'));
-            if (type === 'korea') filtered = filtered.filter(i => i.platform.includes('Корея'));
-            if (type === 'grailed') filtered = filtered.filter(i => i.platform.includes('Grailed'));
-            if (type === 'vinted') filtered = filtered.filter(i => i.platform.includes('Vinted'));
-            
-            renderCards(filtered, document.getElementById('resultsContainer'));
-        }
-
         window.onload = () => {
             fetchMarketListings();
         };
     </script>
 </body>
-</html>
+</html> 
