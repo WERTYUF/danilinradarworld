@@ -253,13 +253,14 @@
 
         <div class="filters-panel">
             <div class="filter-chip active" onclick="setFilter('all', this)">Все рынки</div>
-            <div class="filter-chip" onclick="setFilter('grailed', this)">Grailed (США)</div>
-            <div class="filter-chip" onclick="setFilter('vinted', this)">Vinted (Европа)</div>
+            <div class="filter-chip" onclick="setFilter('china', this)">🇨🇳 Китай (Goofish)</div>
+            <div class="filter-chip" onclick="setFilter('japan', this)">🇯🇵 Япония (Yahoo/Mercari)</div>
             <div class="filter-chip" onclick="setFilter('korea', this)">🇰🇷 Корея</div>
-            <div class="filter-chip" onclick="setFilter('india', this)">🇮🇳 Индия</div>
+            <div class="filter-chip" onclick="setFilter('grailed', this)">Grailed</div>
+            <div class="filter-chip" onclick="setFilter('vinted', this)">Vinted</div>
         </div>
 
-        <div id="loader" class="loader">СИНХРОНИЗАЦИЯ МИРОВЫХ РЫНКОВ...</div>
+        <div id="loader" class="loader">СКАНИРУЕМ КИТАЙ, ЯПОНИЮ И МИР...</div>
         <div id="resultsContainer"></div>
     </div>
 
@@ -271,8 +272,7 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Ссылка от твоего туннеля Serveo
-        const BACKEND_API_URL = "https://b5d80dea23c1d746-130-78-190-38.serveousercontent.com";
+        const BACKEND_API_URL = "https://c32809c5b59159c5-31-77-227-57.serveousercontent.com";
         let currentItems = [];
         let favorites = JSON.parse(localStorage.getItem('danilin_favs') || '[]');
 
@@ -391,10 +391,11 @@
             el.classList.add('active');
             
             let filtered = [...currentItems];
+            if (type === 'china') filtered = filtered.filter(i => i.platform.includes('Китай'));
+            if (type === 'japan') filtered = filtered.filter(i => i.platform.includes('Япония'));
+            if (type === 'korea') filtered = filtered.filter(i => i.platform.includes('Корея'));
             if (type === 'grailed') filtered = filtered.filter(i => i.platform.includes('Grailed'));
             if (type === 'vinted') filtered = filtered.filter(i => i.platform.includes('Vinted'));
-            if (type === 'korea') filtered = filtered.filter(i => i.platform.includes('Корея'));
-            if (type === 'india') filtered = filtered.filter(i => i.platform.includes('Индия'));
             
             renderCards(filtered, document.getElementById('resultsContainer'));
         }
